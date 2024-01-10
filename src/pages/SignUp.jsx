@@ -1,12 +1,26 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useEffect, useRef, useState } from 'react'
 import { auth } from '../services/firebase-config';
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { Link } from 'react-router-dom';
 
-function Form() {
+function SignUp() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
     const [errPopup, setErrPopup] = useState({ show: false, msg: "" });
+
+    useEffect(() => {
+        if (errPopup.show) {
+            const timer = setTimeout(() => {
+                setErrPopup({ show: false, msg: "" });
+            }, 2000)
+
+            return () => {
+                clearTimeout(timer);
+            }
+        }
+    }, [errPopup.show])
 
     async function submitHandler(e) {
         e.preventDefault();
@@ -15,26 +29,25 @@ function Form() {
         const confirmPassword = confirmPasswordRef.current.value;
 
         try {
-            if (!email.length || !password.length || !confirmPassword.length) {
-                throw new Error("fill all required details");
-            } else if (password !== confirmPassword) {
+            if (password !== confirmPassword) {
                 throw new Error("password didnot match");
             } else {
-                const res = await createUserWithEmailAndPassword(auth, email, password);
-                console.log(res.user);
+                await createUserWithEmailAndPassword(auth, email, password);
             }
         } catch (err) {
-            setErrPopup({ show: true, msg: `${err.message}` });
+            setErrPopup({ show: true, msg: err.message });
         }
+        e.target.reset();
     }
+
     return (
-        <div className='card max-w-[30rem] w-full shadow-md bg-base-300 mx-auto'>
+        <div className='card max-w-[30rem] w-full shadow-md bg-base-100 mx-auto'>
             <div className="card-body items-center">
-                <h2 className='card-title'>Sign up</h2>
+                <h2 className='card-title mb-6 text-2xl'>Sign up</h2>
                 {
                     errPopup.show &&
                     <div role="alert" className="alert alert-error">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <InformationCircleIcon className='w-6 h-6' />
                         <span>{errPopup.msg}</span>
                     </div>
                 }
@@ -42,14 +55,19 @@ function Form() {
                     <div className="w-full card-actions gap-6">
                         <input type="email" placeholder="email" className="input input-bordered w-full" ref={emailRef} />
                         <input type="password" placeholder="******" className="input input-bordered w-full" ref={passwordRef} />
+
                         <input type="text" placeholder="confirm password" className="input input-bordered w-full" ref={confirmPasswordRef} />
-                        <button type="submit" className='btn btn-info btn-block'>Sign up</button>
-                        <p className='btn'>Have an account? Login</p>
+
+                        <button type="submit" className='btn btn-info btn-block text-base'>Register</button>
+                        <p className='text-center font-medium'>
+                        <Link to="/login">Have an account? Login</Link>
+                        </p>
                     </div>
                 </form>
             </div>
         </div>
+
     )
 }
 
-export default Form
+export default SignUp

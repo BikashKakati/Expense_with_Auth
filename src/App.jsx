@@ -4,11 +4,12 @@ import { Routes, Route } from "react-router-dom"
 import SignUp from "./pages/SignUp"
 import { useDispatch, useSelector } from "react-redux";
 import Profile from "./pages/Profile/Profile";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import Modal from "./components/Modal";
 import { Loader } from "./components/Modal";
 import { useEffect } from "react";
 import { getStorageData } from "./services/store/slices/authSlice";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const { popUpAlert, currentUser, isLoading } = useSelector((state) => state.auth);
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>

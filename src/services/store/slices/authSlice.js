@@ -7,6 +7,9 @@ export const getStorageData = createAsyncThunk(
     "auth/getStorageData",
     async function (_, { getState }) {
         const state = getState().auth;
+        if(!state.currentUser){
+            return;
+        }
         try {
             const storageData = await getDoc(doc(db, "currentUser", state?.currentUser?.uid));
             return storageData?.data();

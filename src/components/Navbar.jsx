@@ -16,15 +16,17 @@ function Navbar() {
             dispatch(alertHandler({ show: true, msg: "Verification mail sent successfully!" }))
             dispatch(logout());
             Navigate("/login");
-        }catch(err){
-            dispatch(alertHandler({show:true, msg:err.message}));
+        } catch (err) {
+            dispatch(alertHandler({ show: true, msg: err.message }));
         }
     }
     return (
         <header className="navbar bg-base-100 shadow-md justify-between">
-            <div className="btn btn-ghost text-xl">
-                <Link to="/">Calculate Daily</Link>
-            </div>
+            <Link to="/">
+                <div className="btn btn-ghost text-xl">
+                    Calculate Daily
+                </div>
+            </Link>
             <ul className="flex items-center gap-4">
                 {currentUser && !currentUser.isEmailVerified && <li><button className='btn btn-success' onClick={handleVerification}>Veriry Email</button></li>}
                 {

@@ -1,28 +1,47 @@
 import React from 'react'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom';
+import { sendEmailVerification } from 'firebase/auth';
+import { auth } from '../services/firebase-config';
+import { alertHandler, logout } from '../services/store/slices/authSlice';
 function Navbar() {
     const { currentUser, userDetails } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+    const Navigate = useNavigate();
+
+    async function handleVerification() {
+        try {
+            await sendEmailVerification(auth.currentUser);
+            dispatch(alertHandler({ show: true, msg: "Verification mail sent successfully!" }))
+            dispatch(logout());
+            Navigate("/login");
+        }catch(err){
+            dispatch(alertHandler({show:true, msg:err.message}));
+        }
+    }
     return (
         <header className="navbar bg-base-100 shadow-md justify-between">
-            <div className="">
-                <a className="btn btn-ghost text-xl">Calculate Daily</a>
+            <div className="btn btn-ghost text-xl">
+                <Link to="/">Calculate Daily</Link>
             </div>
-            <ul className="">
+            <ul className="flex items-center gap-4">
+                {currentUser && !currentUser.isEmailVerified && <li><button className='btn btn-success' onClick={handleVerification}>Veriry Email</button></li>}
                 {
                     currentUser ?
                         (
-                            <div tabIndex={0} role="button" className="btn btn-ghost">
-                                <Link to="/profile">
-                                    {userDetails ?
+                            <Link to="/profile">
+                                <li tabIndex={0} role="button" className="btn btn-ghost">
+                                    {userDetails?.userName && userDetails?.designation ?
                                         <UserCircleIcon className='w-10 h-10' />
                                         : <p>Please complete your profile</p>
                                     }
-                                </Link>
-                            </div>
+                                </li>
+                            </Link>
                         ) : (
-                            <button className='btn btn-info'>Log in</button>
+                            <Link to="/login">
+                                <li><button className='btn btn-info'>Log in</button></li>
+                            </Link>
                         )
                 }
             </ul>

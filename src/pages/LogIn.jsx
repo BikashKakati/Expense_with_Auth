@@ -1,5 +1,5 @@
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../services/firebase-config';
@@ -10,9 +10,11 @@ function LogIn() {
   const passwordRef = useRef();
   const dispatch = useDispatch();
   const Navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
 
   async function submitHandler(e) {
+    setLoading(true);
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
@@ -25,6 +27,7 @@ function LogIn() {
         isEmailVerified: user.emailVerified,
       }
       dispatch(login(userDetails));
+      setLoading(false);
       Navigate("/");
     } catch (err) {
       dispatch(alertHandler({ show: true, msg: err.message }))
@@ -40,8 +43,11 @@ function LogIn() {
           <div className="w-full card-actions gap-6">
             <input type="email" placeholder="email" className="input input-bordered w-full" ref={emailRef} />
             <input type="password" placeholder="******" className="input input-bordered w-full" ref={passwordRef} />
-            <button type="submit" className='btn btn-info btn-block text-base'>Submit</button>
-            <p className='text-center font-medium'>
+            <button type="submit" className='btn btn-info btn-block text-base'>{loading ? "Loading...":"Submit"}</button>
+            <p className='block'>
+              <Link to="/resetpassword">forget password</Link>
+            </p>
+            <p className='text-end font-medium'>
               <Link to="/signup">Create an account!</Link>
             </p>
           </div>

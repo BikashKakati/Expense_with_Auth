@@ -2,17 +2,30 @@ import Navbar from "./components/Navbar"
 import LogIn from "./pages/LogIn"
 import { Routes, Route } from "react-router-dom"
 import SignUp from "./pages/SignUp"
-import { useSelector } from "react-redux";
-import Profile from "./pages/Profile";
+import { useDispatch, useSelector } from "react-redux";
+import Profile from "./pages/Profile/Profile";
+import Home from "./pages/Home";
+import Modal from "./components/Modal";
+import { Loader } from "./components/Modal";
+import { useEffect } from "react";
+import { getStorageData } from "./services/store/slices/authSlice";
 
 function App() {
-  const {currentUser} = useSelector((state) => state.auth);
-  // console.log(currentUser);
+  const { popUpAlert, currentUser, isLoading } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getStorageData());
+  }, [currentUser])
+  
   return (
     <div className="max-w-full min-h-dvh bg-base-200">
       <Navbar />
       <div className="relative w-full mt-10">
+        {popUpAlert.show && <Modal />}
+        {isLoading && <Loader/>}
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />

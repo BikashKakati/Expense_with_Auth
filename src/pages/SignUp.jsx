@@ -1,26 +1,14 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../services/firebase-config';
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { Link } from 'react-router-dom';
+import { alertHandler } from "../services/store/slices/authSlice";
 
 function SignUp() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
-    const [errPopup, setErrPopup] = useState({ show: false, msg: "" });
-
-    useEffect(() => {
-        if (errPopup.show) {
-            const timer = setTimeout(() => {
-                setErrPopup({ show: false, msg: "" });
-            }, 2000)
-
-            return () => {
-                clearTimeout(timer);
-            }
-        }
-    }, [errPopup.show])
+    const Navigate = useNavigate();
 
     async function submitHandler(e) {
         e.preventDefault();
@@ -33,24 +21,17 @@ function SignUp() {
                 throw new Error("password didnot match");
             } else {
                 await createUserWithEmailAndPassword(auth, email, password);
+                Navigate("/login");
             }
         } catch (err) {
-            setErrPopup({ show: true, msg: err.message });
+            dispatch(alertHandler({ show: true, msg: err.message }))
         }
-        e.target.reset();
     }
 
     return (
         <div className='card max-w-[30rem] w-full shadow-md bg-base-100 mx-auto'>
             <div className="card-body items-center">
                 <h2 className='card-title mb-6 text-2xl'>Sign up</h2>
-                {
-                    errPopup.show &&
-                    <div role="alert" className="alert alert-error">
-                        <InformationCircleIcon className='w-6 h-6' />
-                        <span>{errPopup.msg}</span>
-                    </div>
-                }
                 <form onSubmit={submitHandler}>
                     <div className="w-full card-actions gap-6">
                         <input type="email" placeholder="email" className="input input-bordered w-full" ref={emailRef} />

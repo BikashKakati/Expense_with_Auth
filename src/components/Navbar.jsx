@@ -7,6 +7,7 @@ import { auth } from '../services/firebase-config';
 import { alertHandler, logout } from '../services/store/slices/authSlice';
 function Navbar() {
     const { currentUser, userDetails } = useSelector((state) => state.auth);
+    const { totalExpense } = useSelector((state) => state.expense);
     const dispatch = useDispatch();
     const Navigate = useNavigate();
 
@@ -29,6 +30,10 @@ function Navbar() {
             </Link>
             <ul className="flex items-center gap-4">
                 {currentUser && !currentUser.isEmailVerified && <li><button className='btn btn-success' onClick={handleVerification}>Veriry Email</button></li>}
+                {
+                    totalExpense >= 10000 && 
+                    <li><button className='btn btn-warning'>Activate Premium</button></li>
+                }
                 {
                     currentUser ?
                         (

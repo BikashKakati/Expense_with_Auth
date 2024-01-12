@@ -52,7 +52,7 @@ const expenseSlice = createSlice({
     initialState:{
         loading:false,
         expenses:[],
-        
+        totalExpense:0,
     },
 
     reducers:{
@@ -68,6 +68,7 @@ const expenseSlice = createSlice({
                 return;
             }
             state.expenses = [...state.expenses, action.payload];
+            state.totalExpense += action.payload.amount;
             state.loading = false;
         });
 

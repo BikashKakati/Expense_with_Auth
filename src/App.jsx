@@ -20,9 +20,9 @@ function App() {
   }, [currentUser])
   
   return (
-    <div className="max-w-full min-h-dvh bg-base-200">
+    <div className="max-w-full min-h-dvh bg-base-200 pb-20">
       <Navbar />
-      <div className="relative w-full mt-10">
+      <div className="relative w-full mt-10 p-5">
         {popUpAlert.show && <Modal />}
         {isLoading && <Loader/>}
         <Routes>

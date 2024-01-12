@@ -21,7 +21,7 @@ function Overlays() {
   }, [popUpAlert.show])
   
   return (
-    <div role="alert" className="alert bg-yellow-300 w-72 absolute top-5 right-5 z-10">
+    <div role="alert" className="alert bg-yellow-300 w-72 fixed top-5 right-5 z-10">
       <InformationCircleIcon className='w-6 h-6' />
       <span>{popUpAlert.msg}</span>
     </div>

@@ -11,7 +11,7 @@ export const getStorageData = createAsyncThunk(
             return;
         }
         try {
-            const storageData = await getDoc(doc(db, "currentUser", state?.currentUser?.uid));
+            const storageData = await getDoc(doc(db, `currentUser/${state?.currentUser?.uid}/profile`, state?.currentUser?.uid));
             return storageData?.data();
         } catch (err) {
             throw new Error(err.message);
@@ -23,7 +23,8 @@ export const setStorageData = createAsyncThunk(
     async function (profileDetails, { getState }) {
         const state = getState().auth;
         try {
-            await setDoc(doc(db, "currentUser", state.currentUser.uid), profileDetails);
+            const docRef = doc(db,`currentUser/${state.currentUser.uid}/profile`,state.currentUser.uid)
+            await setDoc(docRef, profileDetails);
             return profileDetails;
         } catch (err) {
             throw new Error(err.message);
@@ -51,6 +52,9 @@ const authSlice = createSlice({
         },
         alertHandler(state,action){
             state.popUpAlert = action.payload;
+        },
+        loadingHandler(state,action){
+            state.isLoading = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -68,6 +72,7 @@ const authSlice = createSlice({
             state.isLoading = true;
         }).addCase(setStorageData.fulfilled, (state, action) => {
             state.userDetails = action.payload;
+            state.isLoading = false;
         }).addCase(setStorageData.rejected, (state,action) =>{
             state.isLoading = false;
             state.popUpAlert = {show:true, msg:action.payload};
@@ -75,5 +80,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { login, logout, alertHandler } = authSlice.actions;
+export const { login, logout, alertHandler,loadingHandler } = authSlice.actions;
 export default authSlice.reducer;

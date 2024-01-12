@@ -1,21 +1,21 @@
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../services/firebase-config';
-import { alertHandler, login } from '../services/store/slices/authSlice';
+import { alertHandler, loadingHandler, login } from '../services/store/slices/authSlice';
 
 function LogIn() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const dispatch = useDispatch();
   const Navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
 
   async function submitHandler(e) {
-    setLoading(true);
     e.preventDefault();
+    dispatch(loadingHandler(true));
+    
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     try {
@@ -27,9 +27,10 @@ function LogIn() {
         isEmailVerified: user.emailVerified,
       }
       dispatch(login(userDetails));
-      setLoading(false);
+      dispatch(loadingHandler(false));
       Navigate("/");
     } catch (err) {
+      dispatch(loadingHandler(false));
       dispatch(alertHandler({ show: true, msg: err.message }))
     }
 
@@ -43,7 +44,7 @@ function LogIn() {
           <div className="w-full card-actions gap-6">
             <input type="email" placeholder="email" className="input input-bordered w-full" ref={emailRef} />
             <input type="password" placeholder="******" className="input input-bordered w-full" ref={passwordRef} />
-            <button type="submit" className='btn btn-info btn-block text-base'>{loading ? "Loading...":"Submit"}</button>
+            <button type="submit" className='btn btn-info btn-block text-base'>{"Submit"}</button>
             <p className='block'>
               <Link to="/resetpassword">forget password</Link>
             </p>

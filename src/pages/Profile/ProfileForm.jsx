@@ -12,6 +12,7 @@ function ProfileForm({ changeMode }) {
     async function profileSubmitHandler(e) {
         e.preventDefault();
         await dispatch(setStorageData({
+            ...userDetails,
             userName: userNameRef.current.value,
             designation: designationRef.current.value,
         }))

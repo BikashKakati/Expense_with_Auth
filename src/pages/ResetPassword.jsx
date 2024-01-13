@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { auth } from '../services/firebase-config';
 import { alertHandler } from '../services/store/slices/authSlice';
+import { Link } from 'react-router-dom';
 
 function ResetPassword() {
     const resetEmailRef = useRef();
@@ -25,6 +26,9 @@ function ResetPassword() {
                     <div className="w-full card-actions gap-6">
                         <input type="email" placeholder="email" className="input input-bordered w-full" ref={resetEmailRef} />
                         <button type="submit" className='btn btn-info btn-block text-base'>Submit</button>
+                        <p className='font-medium text-center'>
+                            <Link to="/login">login</Link>
+                        </p>
                     </div>
                 </form>
             </div>

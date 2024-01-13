@@ -3,12 +3,14 @@ import React, { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../services/firebase-config';
 import { alertHandler } from "../services/store/slices/authSlice";
+import { useDispatch } from 'react-redux';
 
 function SignUp() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
     const Navigate = useNavigate();
+    const dispatch = useDispatch();
 
     async function submitHandler(e) {
         e.preventDefault();

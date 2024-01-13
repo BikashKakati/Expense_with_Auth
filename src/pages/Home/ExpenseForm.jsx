@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { setExpenseData } from '../../services/store/slices/expenseSlice';
+import { setExpenseData, updateTotalExpense, addExpense } from '../../services/store/slices/expenseSlice';
 import { alertHandler } from '../../services/store/slices/authSlice';
 
 function ExpenseForm() {
@@ -26,7 +26,9 @@ function ExpenseForm() {
             description,
             category,
         }
+        dispatch(addExpense(expenseData));
         await dispatch(setExpenseData(expenseData));
+        dispatch(updateTotalExpense());
         e.target.reset();
     }
 
@@ -40,7 +42,7 @@ function ExpenseForm() {
                         <input type="text" placeholder="description" className="input input-bordered w-full" ref={descriptionRef} />
                         <input type="number" placeholder="Amount" className="input input-bordered w-full" ref={amountRef} />
                         <select className="select select-bordered w-full" ref={catRef}>
-                            <option disabled defaultValue={"Rent"}>Select Category</option>
+                            <option disabled>Select Category</option>
                             <option value="Rent">Rent</option>
                             <option value="Fuel">Fuel</option>
                             <option value="Snacks">Food</option>

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { alertHandler } from '../../services/store/slices/authSlice';
-import { deletExpenseData, setExpenseData } from '../../services/store/slices/expenseSlice';
+import { addExpense, deletExpenseData, deleteExpense, setExpenseData, updateTotalExpense } from '../../services/store/slices/expenseSlice';
 
 function ExpenseCard({ expense }) {
     const dispatch = useDispatch();
@@ -12,7 +12,9 @@ function ExpenseCard({ expense }) {
 
 
     async function handleDeleteExpense(expenseId) {
+        dispatch(deleteExpense(expenseId));
         await dispatch(deletExpenseData(expenseId));
+        dispatch(updateTotalExpense());
         dispatch(alertHandler({ show: true, msg: "Delete successfully" }));
     }
 
@@ -31,7 +33,9 @@ function ExpenseCard({ expense }) {
             description,
             category,
         }
+        dispatch(addExpense(expenseData));
         await dispatch(setExpenseData(expenseData));
+        dispatch(updateTotalExpense());
         changeMode();
     }
 
@@ -76,7 +80,6 @@ function ExpenseCard({ expense }) {
                                 ref={amountRef}
                             />
                             <div className="card-actions justify-end">
-                                {/* <button className="btn btn-error" onClick={() => handleDeleteExpense(expense.id)}>Delete</button> */}
                                 <button className="btn btn-success" 
                                 onClick={()=>editDoneHandler(expense.id)}>Done</button>
                             </div>

@@ -1,12 +1,14 @@
-import React from 'react'
-import { UserCircleIcon } from '@heroicons/react/24/outline'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { sendEmailVerification } from 'firebase/auth';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../services/firebase-config';
-import { alertHandler, logout } from '../services/store/slices/authSlice';
+import { alertHandler, logout, setStorageData, toggleThemeHandler } from '../services/store/slices/authSlice';
+
+
 function Navbar() {
-    const { currentUser, userDetails } = useSelector((state) => state.auth);
+    const { currentUser, userDetails} = useSelector((state) => state.auth);
     const { totalExpense } = useSelector((state) => state.expense);
     const dispatch = useDispatch();
     const Navigate = useNavigate();
@@ -21,6 +23,18 @@ function Navbar() {
             dispatch(alertHandler({ show: true, msg: err.message }));
         }
     }
+
+    function handleThemeChange(){
+        dispatch(toggleThemeHandler());
+    }
+    async function handlePremium(){
+        // dispatch(premiumHandler());
+        await dispatch(setStorageData({
+            ...userDetails,
+            premium:true,
+        }))
+        dispatch(toggleThemeHandler());
+    }
     return (
         <header className="navbar bg-base-100 shadow-md justify-between">
             <Link to="/">
@@ -29,17 +43,19 @@ function Navbar() {
                 </div>
             </Link>
             <ul className="flex items-center gap-4">
-                {currentUser && !currentUser.isEmailVerified && <li><button className='btn btn-success' onClick={handleVerification}>Veriry Email</button></li>}
+                {userDetails?.premium && <input type="checkbox" className="toggle" onChange={handleThemeChange}/>}
+
+                {currentUser && !currentUser?.isEmailVerified && <li><button className='btn btn-success' onClick={handleVerification}>Verify Email</button></li>}
                 {
-                    totalExpense >= 10000 && 
-                    <li><button className='btn btn-warning'>Activate Premium</button></li>
+                    currentUser && totalExpense >= 10000 && !userDetails?.premium &&
+                    <li><button className='btn btn-warning' onClick={handlePremium}>Activate Premium</button></li>
                 }
                 {
                     currentUser ?
                         (
                             <Link to="/profile">
                                 <li tabIndex={0} role="button" className="btn btn-ghost">
-                                    {userDetails?.userName && userDetails?.designation ?
+                                    {userDetails?.userName?.length && userDetails?.designation?.length ?
                                         <UserCircleIcon className='w-10 h-10' />
                                         : <p>Please complete your profile</p>
                                     }

@@ -39,6 +39,7 @@ const authSlice = createSlice({
         popUpAlert:{show:false,msg:""},
         currentUser: JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || null,
         userDetails: null,
+        toggleTheme:false,
     },
 
     reducers: {
@@ -55,6 +56,9 @@ const authSlice = createSlice({
         },
         loadingHandler(state,action){
             state.isLoading = action.payload;
+        },
+        toggleThemeHandler(state){
+            state.toggleTheme = !state.toggleTheme;
         }
     },
     extraReducers: (builder) => {
@@ -80,5 +84,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { login, logout, alertHandler,loadingHandler } = authSlice.actions;
+export const { login, logout, alertHandler,loadingHandler, toggleThemeHandler} = authSlice.actions;
 export default authSlice.reducer;

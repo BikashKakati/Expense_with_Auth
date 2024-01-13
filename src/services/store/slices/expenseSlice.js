@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { collection, deleteDoc, doc, getDocs, setDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 
+
 export const setExpenseData = createAsyncThunk(
     'expense/setExpenseData',
     async function(expenseData,{getState}){
@@ -56,19 +57,25 @@ const expenseSlice = createSlice({
     },
 
     reducers:{
+        addExpense(state,action){
+            const exitExpenseIdx = state.expenses.findIndex(expense => expense.id === action.payload.id);
+            if(exitExpenseIdx >= 0){
+                state.expenses[exitExpenseIdx] = action.payload;
+                return;
+            }
+            state.expenses = [...state.expenses, action.payload];
+        },
+        deleteExpense(state, action){
+            state.expenses = state.expenses.filter(expense => expense.id !== action.payload);
+        },
+        updateTotalExpense(state){
+            state.totalExpense = state.expenses.reduce((iniValue,expense) => iniValue + Number(expense.amount),0);
+        }
     },
     extraReducers(builder){
         builder.addCase(setExpenseData.pending,(state,action)=>{
             state.loading = true;
         }).addCase(setExpenseData.fulfilled,(state,action)=>{
-            const exitExpenseIdx = state.expenses.findIndex(expense => expense.id === action.payload.id);
-            if(exitExpenseIdx >= 0){
-                state.expenses[exitExpenseIdx] = action.payload;
-                state.loading = false;
-                return;
-            }
-            state.expenses = [...state.expenses, action.payload];
-            state.totalExpense += action.payload.amount;
             state.loading = false;
         });
 
@@ -76,6 +83,7 @@ const expenseSlice = createSlice({
             state.loading = true;
         }).addCase(getExpenseData.fulfilled, (state,action)=>{
             state.expenses = action.payload;
+            state.totalExpense = state.expenses.reduce((iniValue,expense) => iniValue + Number(expense.amount),0);
             state.loading = false;
         }).addCase(getExpenseData.rejected, (state,action)=>{
             state.loading = false;
@@ -84,12 +92,11 @@ const expenseSlice = createSlice({
         builder.addCase(deletExpenseData.pending,(state,action)=>{
             state.loading = true;
         }).addCase(deletExpenseData.fulfilled, (state,action)=>{
-            state.expenses = state.expenses.filter(expense => expense.id !== action.payload);
             state.loading = false;
         }).addCase(deletExpenseData.rejected, (state,action)=>{
             state.loading = false;
         });
     }
 })
-
+export const {updateTotalExpense, addExpense, deleteExpense} = expenseSlice.actions;
 export default expenseSlice.reducer;

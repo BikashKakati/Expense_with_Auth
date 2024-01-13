@@ -10,27 +10,30 @@ import { Loader } from "./components/Modal";
 import { useEffect } from "react";
 import { getStorageData } from "./services/store/slices/authSlice";
 import ResetPassword from "./pages/ResetPassword";
+import PrivateRoute from "./components/PrivateRoute";
+import { getExpenseData } from "./services/store/slices/expenseSlice";
 
 function App() {
-  const { popUpAlert, currentUser, isLoading } = useSelector((state) => state.auth);
+  const { popUpAlert, currentUser, isLoading, toggleTheme } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getStorageData());
+    dispatch(getExpenseData());
   }, [currentUser])
   
   return (
-    <div className="max-w-full min-h-dvh bg-base-200 pb-20">
+    <div className={`max-w-full min-h-dvh pb-20 ${toggleTheme ?"bg-zinc-500" : "bg-base-200"}`}>
       <Navbar />
       <div className="relative w-full mt-10 p-5">
         {popUpAlert.show && <Modal />}
         {isLoading && <Loader/>}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         </Routes>
       </div>
     </div>

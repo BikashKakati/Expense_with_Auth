@@ -4,12 +4,12 @@ import {getAuth} from "firebase/auth";
 import {getFirestore} from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB336K4ZdU3rFjNBIJIxnYPQbugmvvNgPA",
-  authDomain: "expense-tracker-5fe32.firebaseapp.com",
-  projectId: "expense-tracker-5fe32",
-  storageBucket: "expense-tracker-5fe32.appspot.com",
-  messagingSenderId: "873136141507",
-  appId: "1:873136141507:web:6c57446fa9c9d03fd01e76"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSEGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID
 };
 
 // Initialize Firebase

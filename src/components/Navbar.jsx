@@ -4,7 +4,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../services/firebase-config';
-import { alertHandler, logout, setStorageData, toggleThemeHandler } from '../services/store/slices/authSlice';
+import { setStorageData } from '../services/store/api/authThunk';
+import { alertHandler, logout, toggleThemeHandler } from '../services/store/slices/authSlice';
 
 
 function Navbar() {
@@ -28,7 +29,6 @@ function Navbar() {
         dispatch(toggleThemeHandler());
     }
     async function handlePremium(){
-        // dispatch(premiumHandler());
         await dispatch(setStorageData({
             ...userDetails,
             premium:true,
@@ -45,11 +45,12 @@ function Navbar() {
             <ul className="flex items-center gap-4">
                 {userDetails?.premium && <input type="checkbox" className="toggle" onChange={handleThemeChange}/>}
 
-                {currentUser && !currentUser?.isEmailVerified && <li><button className='btn btn-success' onClick={handleVerification}>Verify Email</button></li>}
                 {
                     currentUser && totalExpense >= 10000 && !userDetails?.premium &&
                     <li><button className='btn btn-warning' onClick={handlePremium}>Activate Premium</button></li>
                 }
+                
+                {currentUser && !currentUser?.isEmailVerified && <li><button className='btn btn-success' onClick={handleVerification}>Verify Email</button></li>}
                 {
                     currentUser ?
                         (

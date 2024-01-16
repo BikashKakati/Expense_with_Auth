@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setExpenseData, updateTotalExpense, addExpense } from '../../services/store/slices/expenseSlice';
+import { setExpenseData } from '../../services/store/api/expenseThunk';
 import { alertHandler } from '../../services/store/slices/authSlice';
 
 function ExpenseForm() {
@@ -26,9 +26,7 @@ function ExpenseForm() {
             description,
             category,
         }
-        dispatch(addExpense(expenseData));
         await dispatch(setExpenseData(expenseData));
-        dispatch(updateTotalExpense());
         e.target.reset();
     }
 
@@ -48,7 +46,7 @@ function ExpenseForm() {
                             <option value="Snacks">Food</option>
                         </select>
 
-                        <button type="submit" className='btn btn-info btn-block text-base'>Add Expense</button>
+                        <button type="submit" className='btn btn-error btn-block'>Add Expense</button>
 
                     </div>
                 </form>

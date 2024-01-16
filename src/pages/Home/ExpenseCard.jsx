@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { deletExpenseData, setExpenseData } from '../../services/store/api/expenseThunk';
 import { alertHandler } from '../../services/store/slices/authSlice';
-import { addExpense, deletExpenseData, deleteExpense, setExpenseData, updateTotalExpense } from '../../services/store/slices/expenseSlice';
 
 function ExpenseCard({ expense }) {
     const dispatch = useDispatch();
@@ -12,9 +12,7 @@ function ExpenseCard({ expense }) {
 
 
     async function handleDeleteExpense(expenseId) {
-        dispatch(deleteExpense(expenseId));
-        await dispatch(deletExpenseData(expenseId));
-        dispatch(updateTotalExpense());
+       await dispatch(deletExpenseData(expenseId));
         dispatch(alertHandler({ show: true, msg: "Delete successfully" }));
     }
 
@@ -33,9 +31,7 @@ function ExpenseCard({ expense }) {
             description,
             category,
         }
-        dispatch(addExpense(expenseData));
-        await dispatch(setExpenseData(expenseData));
-        dispatch(updateTotalExpense());
+       await dispatch(setExpenseData(expenseData));
         changeMode();
     }
 

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { setStorageData} from '../../services/store/slices/authSlice';
+import { setStorageData} from '../../services/store/api/authThunk';
 import { useDispatch, useSelector } from 'react-redux';
 
 

@@ -1,17 +1,17 @@
-import Navbar from "./components/Navbar"
-import LogIn from "./pages/LogIn"
-import { Routes, Route } from "react-router-dom"
-import SignUp from "./pages/SignUp"
-import { useDispatch, useSelector } from "react-redux";
-import Profile from "./pages/Profile/Profile";
-import Home from "./pages/Home/Home";
-import Modal from "./components/Modal";
-import { Loader } from "./components/Modal";
 import { useEffect } from "react";
-import { getStorageData } from "./services/store/slices/authSlice";
-import ResetPassword from "./pages/ResetPassword";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import Modal, { Loader } from "./components/Modal";
+import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
-import { getExpenseData } from "./services/store/slices/expenseSlice";
+import Home from "./pages/Home/Home";
+import LogIn from "./pages/LogIn";
+import Profile from "./pages/Profile/Profile";
+import ResetPassword from "./pages/ResetPassword";
+import SignUp from "./pages/SignUp";
+import { getStorageData } from "./services/store/api/authThunk";
+import { getExpenseData } from "./services/store/api/expenseThunk";
+
 
 function App() {
   const { popUpAlert, currentUser, isLoading, toggleTheme } = useSelector((state) => state.auth);

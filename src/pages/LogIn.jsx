@@ -27,6 +27,7 @@ function LogIn() {
         isEmailVerified: user.emailVerified,
       }
       dispatch(login(userDetails));
+      dispatch(alertHandler({ show: true, msg: "Login successfully" }))
       dispatch(loadingHandler(false));
       Navigate("/");
     } catch (err) {

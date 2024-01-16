@@ -1,0 +1,15 @@
+#REDUX CORE CONCEPT
+Using redux we have create a centrel data(state) store, that our all components get a susbscription to it( allowed to use the state), but couldnot allow to update the state directly. The components dispatch some actions(this acitons are basically objects) what should be done and a function accept this request and work accordingly to update the state, this functions are called reducer function.
+-- in redux toolkit we didnot need to specify the action type, only pass the action data, it automatically detect by reducer funciton name(we can also called them actions).
+
+# ASYNC THUNK(CREATE ASYNC THUNK)
+This is an action creator which is allows to create async actions in redux store, because inside reducer it not allowed us to create async actions.
+
+# EXTRA REDUCERS
+This reducer is used to manage actions which are not manage by reducer or cannot fit with reducer(like async functions) or those actions which are defined outside the slice, which are not allowed to write inside the reducer and update the state accordingly.
+
+# BUILDER & ADDCASE
+This is an object which is used to define our actions type using addcase method when we can use createReducer function instead of createSlice(provided by redux toolkit), it works similar like SWITCH statements, but better as it have TS support.
+-- builder.addCase(actionCreator,reducer)
+it gives us two parameter one is actions creator and other is reducer function
+-- But BUILDER is used with EXTRA REDUCERS not to define actions type, but to handle the differnt types of async action states.
